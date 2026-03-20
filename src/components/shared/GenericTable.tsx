@@ -38,10 +38,10 @@ export const GenericTable = <T extends Record<string, any>>({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.length === 0 ? (
+                    {!Array.isArray(data) || data.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center text-slate-500">
-                                No hay datos para mostrar.
+                                {!Array.isArray(data) ? "Error: Los datos no son válidos." : "No hay datos para mostrar."}
                             </TableCell>
                         </TableRow>
                     ) : (
@@ -62,6 +62,7 @@ export const GenericTable = <T extends Record<string, any>>({
                         ))
                     )}
                 </TableBody>
+
             </Table>
         </div>
     );
