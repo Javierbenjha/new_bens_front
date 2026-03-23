@@ -10,9 +10,10 @@ import { CustomersDashboard } from "@/features/erp/customers/components/Customer
 import { SuppliersDashboard } from "@/features/erp/suppliers/components/SuppliersDashboard";
 import { ItemsDashboard } from "@/features/erp/items/components/ItemsDashboard";
 import { LoginForm } from "@/features/auth/components/LoginForm";
+import { HomePage } from "@/pages/ecommerce/HomePage";
 
 // Tipos básicos para los modulos
-const Home = () => <div className="p-4"><h2 className="text-2xl">Catálogo de Productos</h2><p>Bienvenido a la tienda pública.</p></div>;
+
 const ERPDashboard = () => <div className="p-4 bg-white rounded-lg shadow"><h2 className="text-2xl font-bold mb-4">Dashboard General</h2><p>Resumen de métricas clave del sistema.</p></div>;
 
 const router = createBrowserRouter([
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home />,
+                element: <HomePage />,
             },
             // Aquí irían las rutas de carrito, checkout, producto individual, etc.
         ],

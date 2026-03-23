@@ -7,6 +7,10 @@ export interface Product {
     marcaId: number;
     color: string[];
     tallas: string[];
+    imagenes?: string[];
+    sku: string;
+    hasDiscount: boolean;
+    discountValue: number;
 }
 
 export interface CreateProductDto {
@@ -17,4 +21,8 @@ export interface CreateProductDto {
     marcaId: number;
     color: string[];
     tallas: string[];
+    imagenes?: string[];
+    sku: string;
+    hasDiscount: boolean;
+    discountValue: number;
 }
