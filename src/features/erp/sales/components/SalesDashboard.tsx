@@ -1,15 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { MOCK_SALES } from "../data/mock-sales";
 
 export const SalesDashboard = () => {
-    const dummySales = [
-        { id: "V-001", date: "2026-03-02", customer: "Juan Perez", total: "$1,200.00", status: "Completada" },
-        { id: "V-002", date: "2026-03-02", customer: "Maria Rodriguez", total: "$450.00", status: "Pendiente" },
-        { id: "V-003", date: "2026-03-01", customer: "Empresa Global SA", total: "$5,300.00", status: "Completada" },
-        { id: "V-004", date: "2026-03-01", customer: "Luis Gomez", total: "$85.00", status: "Cancelada" },
-    ];
-
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -63,18 +57,17 @@ export const SalesDashboard = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {dummySales.map((sale) => (
+                            {MOCK_SALES.map((sale) => (
                                 <TableRow key={sale.id}>
                                     <TableCell className="font-medium">{sale.id}</TableCell>
-                                    <TableCell>{sale.date}</TableCell>
+                                    <TableCell>{new Date(sale.date).toLocaleDateString()}</TableCell>
                                     <TableCell>{sale.customer}</TableCell>
-                                    <TableCell>{sale.total}</TableCell>
+                                    <TableCell>${sale.totalAmount.toFixed(2)}</TableCell>
                                     <TableCell>
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${sale.status === "Completada" ? "bg-green-100 text-green-800" :
-                                                sale.status === "Pendiente" ? "bg-yellow-100 text-yellow-800" :
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${sale.status === "completed" ? "bg-green-100 text-green-800" :
                                                     "bg-red-100 text-red-800"
                                             }`}>
-                                            {sale.status}
+                                            {sale.status === 'completed' ? 'Completada' : 'Reembolsada'}
                                         </span>
                                     </TableCell>
                                     <TableCell className="text-right">
