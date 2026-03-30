@@ -12,6 +12,8 @@ export interface Column<T> {
     header: string;
     key?: keyof T;
     render?: (item: T) => React.ReactNode;
+    className?: string;
+    headerClassName?: string;
 }
 
 interface GenericTableProps<T> {
@@ -31,7 +33,10 @@ export const GenericTable = <T extends Record<string, any>>({
                 <TableHeader>
                     <TableRow>
                         {columns.map((column, index) => (
-                            <TableHead key={index} className="bg-slate-50 font-semibold text-slate-700">
+                            <TableHead 
+                                key={index} 
+                                className={`bg-slate-50 font-semibold text-slate-700 ${column.headerClassName || ""}`}
+                            >
                                 {column.header}
                             </TableHead>
                         ))}
@@ -52,7 +57,7 @@ export const GenericTable = <T extends Record<string, any>>({
                                 onClick={() => onRowClick && onRowClick(row)}
                             >
                                 {columns.map((column, colIndex) => (
-                                    <TableCell key={colIndex}>
+                                    <TableCell key={colIndex} className={column.className}>
                                         {column.render
                                             ? column.render(row)
                                             : (row[column.key as keyof T] as React.ReactNode)}

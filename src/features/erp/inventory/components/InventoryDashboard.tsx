@@ -1,17 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, PackageOpen, MoreVertical, Edit2 } from "lucide-react";
+import { Search, Plus, PackageOpen, Edit2 } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Link } from "react-router-dom";
 import { useInventory } from "../hooks/useInventory";
 import { GenericTable } from "@/components/shared/GenericTable";
+import { GenericPagination } from "@/components/shared/GenericPagination";
 import type { Column } from "@/components/shared/GenericTable";
 import type { Product } from "../../products/types/Products.type";
 
 export const InventoryDashboard = () => {
     const { products, isLoadingProducts, fetchInventoryProducts } = useInventory();
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(products.length / 10) || 1; // Ejemplo de paginación local (10 por página)
 
     useEffect(() => {
         fetchInventoryProducts();
@@ -19,79 +22,92 @@ export const InventoryDashboard = () => {
 
     const columns: Column<Product>[] = [
         { 
-            header: "sku", 
-            render: (p) => <span className="font-mono text-slate-500 text-xs">#{p.sku}</span> 
+            header: "SKU", 
+            headerClassName: "w-[100px] text-xs uppercase tracking-wider",
+            render: (p) => <span className="font-mono text-slate-400 text-xs font-semibold leading-none">#{p.sku}</span> 
         },
         { 
-            header: "Nombre del Producto", 
+            header: "Producto", 
+            headerClassName: "min-w-[200px]",
             render: (p) => (
-                <div className="flex flex-col">
-                    <span className="font-semibold text-slate-900">{p.nombre}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">{p.descripcion}</span>
+                <div className="flex flex-col gap-0.5">
+                    <span className="font-semibold text-slate-800 text-sm leading-tight">{p.nombre}</span>
+                    <span className="text-xs text-slate-500 line-clamp-1">{p.descripcion || "Sin descripción"}</span>
                 </div>
             )
         },
         { 
             header: "Stock", 
+            headerClassName: "text-center w-[90px]",
+            className: "text-center",
             render: (p) => (
-                <span className={`font-bold ${p.cantidad < 10 ? "text-red-500" : "text-slate-700"}`}>
-                    {p.cantidad} und.
+                <span className={`text-xs font-semibold px-2 py-1 rounded-md ${
+                    p.cantidad < 10 
+                        ? "bg-rose-50 text-rose-600 border border-rose-100" 
+                        : "bg-slate-50 text-slate-700 border border-slate-100"
+                }`}>
+                    {p.cantidad} <span className="text-xs font-medium opacity-70">und.</span>
                 </span>
             )
         },
         {
-            header: "Categoria",
-            render: (p) => (
-                <span className="font-medium text-slate-600">
-                    {p.categoria?.nombre || "Sin Categoría"}
-                </span>
-            )
+            header: "Categoría",
+            headerClassName: "hidden md:table-cell",
+            className: "hidden md:table-cell text-slate-500 text-xs font-medium",
+            render: (p) => p.categoria?.nombre || "-"
         },
         {
             header: "Marca",
-            render: (p) => (
-                <span className="font-medium text-slate-600">
-                    {p.marca?.nombre || "Sin Marca"}
-                </span>
-            )
+            headerClassName: "hidden md:table-cell",
+            className: "hidden md:table-cell text-slate-500 text-xs font-medium",
+            render: (p) => p.marca?.nombre || "-"
         },
         { 
             header: "Precio", 
-            render: (p) => (
-                <span className="font-medium text-slate-600">
-                    S/ {Number(p.precio).toFixed(2)}
-                </span>
-            ) 
+            headerClassName: "text-right w-[100px]",
+            className: "text-right font-mono text-sm font-bold text-slate-700",
+            render: (p) => `S/ ${Number(p.precio).toFixed(2)}`
         },
         {
-            header: "Descuento",
+            header: "Dcto.",
+            headerClassName: "text-right w-[80px]",
+            className: "text-right",
             render: (p) => (
-                <span className="font-medium text-slate-600">
-                    {Number(p.valorDescuento).toFixed(2)}%
+                <span className={`text-xs font-semibold px-2 py-1 rounded ${
+                    Number(p.valorDescuento) > 0 
+                        ? "text-emerald-600 bg-emerald-50" 
+                        : "text-rose-600 bg-rose-50"
+                }`}>
+                    {Number(p.valorDescuento).toFixed(1)}%
                 </span>
             ) 
         },
         {
             header: "Estado",
+            headerClassName: "text-center w-[110px]",
+            className: "text-center",
             render: (p) => (
-                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                    p.cantidad > 20 ? "bg-emerald-100 text-emerald-800" :
-                    p.cantidad > 0 ? "bg-amber-100 text-amber-800" :
-                    "bg-rose-100 text-rose-800"
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-tighter border ${
+                    p.cantidad > 20 
+                        ? "bg-green-500/10 text-green-700 border-green-200" 
+                        : p.cantidad > 0 
+                            ? "bg-amber-500/10 text-amber-700 border-amber-200" 
+                            : "bg-rose-500/10 text-rose-700 border-rose-200"
                 }`}>
-                    {p.cantidad > 0 ? "En Stock" : "Agotado"}
+                    <span className={`mr-1 w-1 h-1 rounded-full ${
+                        p.cantidad > 20 ? "bg-green-500" : p.cantidad > 0 ? "bg-amber-500" : "bg-rose-500"
+                    }`} />
+                    {p.cantidad > 0 ? "DISPONIBLE" : "AGOTADO"}
                 </span>
             )
         },
         {
-            header: "Acciones",
+            header: "",
+            headerClassName: "w-[60px]",
             render: () => (
-                <div className="flex justify-end gap-2">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-primary">
-                        <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-600">
-                        <MoreVertical className="w-4 h-4" />
+                <div className="flex justify-end pr-2">
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors">
+                        <Edit2 className="w-3.5 h-3.5" />
                     </Button>
                 </div>
             )
@@ -124,7 +140,7 @@ export const InventoryDashboard = () => {
                         </div>
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="p-0">
+                <CardContent className="px-6 pb-6">
                     {isLoadingProducts ? (
                         <div className="flex flex-col items-center justify-center py-20 bg-slate-50/30">
                             <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
@@ -139,7 +155,16 @@ export const InventoryDashboard = () => {
                             </Button>
                         </div>
                     ) : (
-                        <GenericTable columns={columns} data={products} />
+                        <div className="flex flex-col">
+                            <GenericTable columns={columns} data={products.slice((currentPage - 1) * 10, currentPage * 10)} />
+                            <div className="p-4 border-t bg-slate-50/50">
+                                <GenericPagination 
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
+                        </div>
                     )}
                 </CardContent>
             </Card>
