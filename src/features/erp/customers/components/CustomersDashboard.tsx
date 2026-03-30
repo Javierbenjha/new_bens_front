@@ -102,7 +102,7 @@ export const CustomersDashboard = () => {
                     <CardTitle className="text-lg">Base de Datos de Clientes</CardTitle>
                     <CardDescription>Gestiona la información y el historial de tus clientes registrados en el sistema.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-2">
+                <CardContent className="pl-6 pr-6">
                     <GenericTable columns={columns} data={customers} />
                 </CardContent>
             </Card>

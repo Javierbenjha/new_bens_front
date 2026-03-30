@@ -1,14 +1,17 @@
 export interface Supplier {
-    id: string;
-    name: string;
-    ruc: string;
-    category: string;
-    contact: string;
+  id?: number;
+  documento: string;
+  descripcion?: string | null;
+  correo: string;
+  telefono?: string | null;
+  createdAt?: Date;
 }
 
 export interface CreateSupplierDto {
-    name: string;
-    ruc: string;
-    category: string;
-    contact: string;
+  documento: string;
+  descripcion?: string | null;
+  correo: string;
+  telefono?: string | null;
 }
+
+
