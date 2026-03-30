@@ -39,8 +39,9 @@ export const ProductsDashboard = () => {
     const [precio, setPrecio] = useState("");
     const [cantidad, setCantidad] = useState("");
     const [sku, setSku] = useState("");
-    const [hasDiscount, setHasDiscount] = useState(false);
-    const [discountValue, setDiscountValue] = useState("");
+    const [descuento, setDescuento] = useState(0);
+    const [valorDescuento, setValorDescuento] = useState("");
+    const [descripcion, setDescripcion] = useState("");
 
     const generateSku = () => {
         const randomNum = Math.floor(10000000 + Math.random() * 90000000);
@@ -169,8 +170,9 @@ export const ProductsDashboard = () => {
             tallas: selectedTallas,
             imagenes: imagenes.filter(img => img !== null) as string[],
             sku: sku.trim(),
-            hasDiscount,
-            discountValue: hasDiscount ? parseFloat(discountValue) || 0 : 0,
+            descripcion: descripcion.trim(),
+            descuento,
+            valorDescuento: descuento === 1 ? parseFloat(valorDescuento) || 0 : 0,
         });
 
         if (newProduct) {
@@ -184,8 +186,9 @@ export const ProductsDashboard = () => {
             setSelectedTallas([]);
             setImagenes([null, null, null, null]);
             setSku("");
-            setHasDiscount(false);
-            setDiscountValue("");
+            setDescuento(0);
+            setValorDescuento("");
+            setDescripcion("");
         } else {
             sileo.error({ title: 'Error', description: 'Hubo un error al guardar el producto. Revisa la consola.' });
         }
@@ -346,19 +349,19 @@ export const ProductsDashboard = () => {
                                     <div className="flex items-center gap-3 h-10">
                                         <button
                                             type="button"
-                                            onClick={() => setHasDiscount(!hasDiscount)}
-                                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${hasDiscount ? "bg-primary" : "bg-slate-200"}`}
+                                            onClick={() => setDescuento(descuento === 1 ? 0 : 1)}
+                                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${descuento === 1 ? "bg-primary" : "bg-slate-200"}`}
                                         >
                                             <span
-                                                className={`pointer-events-none block h-4 w-4 rounded-full bg-white shadow-lg ring-0 transition-transform ${hasDiscount ? "translate-x-6" : "translate-x-1"}`}
+                                                className={`pointer-events-none block h-4 w-4 rounded-full bg-white shadow-lg ring-0 transition-transform ${descuento === 1 ? "translate-x-6" : "translate-x-1"}`}
                                             />
                                         </button>
                                         
                                         <span className="text-sm text-slate-600 font-medium min-w-[70px]">
-                                            {hasDiscount ? "Valor:" : "Inactivo"}
+                                            {descuento === 1 ? "Valor:" : "Inactivo"}
                                         </span>
                                         
-                                        {hasDiscount && (
+                                        {descuento === 1 && (
                                             <div className="flex-1 max-w-[120px] relative animate-in fade-in slide-in-from-left-2">
                                                 <Input
                                                     id="discount"
@@ -366,8 +369,8 @@ export const ProductsDashboard = () => {
                                                     min="0"
                                                     max="100"
                                                     placeholder="%"
-                                                    value={discountValue}
-                                                    onChange={(e) => setDiscountValue(e.target.value)}
+                                                    value={valorDescuento}
+                                                    onChange={(e) => setValorDescuento(e.target.value)}
                                                     className="h-10 pr-7 text-sm"
                                                 />
                                                 <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-medium">%</span>
@@ -383,6 +386,8 @@ export const ProductsDashboard = () => {
                                     id="description"
                                     placeholder="Detalla los materiales, estilo, corte y características de la prenda..."
                                     className="resize-none h-28 overflow-y-auto"
+                                    value={descripcion}
+                                    onChange={(e) => setDescripcion(e.target.value)}
                                 />
                             </div>
 

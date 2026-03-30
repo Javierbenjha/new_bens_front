@@ -3,14 +3,15 @@ export interface Product {
     nombre: string;
     precio: number;
     cantidad: number;
-    categoriaId: number;
-    marcaId: number;
     color: string[];
     tallas: string[];
     imagenes?: string[];
     sku: string;
-    hasDiscount: boolean;
-    discountValue: number;
+    descripcion: string;
+    descuento: number;
+    valorDescuento: number;
+    categoria?: { id: number; nombre: string };
+    marca?: { id: number; nombre: string };
 }
 
 export interface CreateProductDto {
@@ -23,6 +24,7 @@ export interface CreateProductDto {
     tallas: string[];
     imagenes?: string[];
     sku: string;
-    hasDiscount: boolean;
-    discountValue: number;
+    descripcion: string;
+    descuento: number;
+    valorDescuento: number;
 }
